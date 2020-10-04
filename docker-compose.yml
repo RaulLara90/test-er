@@ -1,0 +1,27 @@
+version: '3.7'
+services:
+  mysql-server:
+    image: mysql:8
+    cap_add:
+      - SYS_NICE
+    ports:
+      - "3306:3306"
+    restart: always
+    environment:
+      MYSQL_DATABASE: db_transactional
+      MYSQL_ROOT_PASSWORD: 1234
+    networks:
+      - local-net
+  tran:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    restart: always
+    depends_on:
+      - mysql-server
+    networks:
+      - local-net
+networks:
+  local-net:
